@@ -1,8 +1,6 @@
 package br.com.impacta.prateleiradigital.br.negocio;
 
-import br.com.impacta.prateleiradigital.br.negocio.Filme;
-import br.com.impacta.prateleiradigital.br.negocio.FilmeJaExisteException;
-import br.com.impacta.prateleiradigital.br.negocio.FilmeService;
+import java.util.List;
 
 public class FilmeController {
     private FilmeService filmeService = new FilmeService();
@@ -17,5 +15,16 @@ public class FilmeController {
         }
     }
 
-    // Outros métodos para interação com o usuário...
+    public void importarFilmes(String caminhoArquivo) {
+        List<Filme> filmes = CSVProcessor.processarCSV(caminhoArquivo);
+
+        for (Filme filme : filmes) {
+            try {
+                filmeService.adicionarFilme(filme);
+                System.out.println("Filme importado: " + filme.getTitulo());
+            } catch (FilmeJaExisteException e) {
+                System.out.println("Erro ao importar filme: " + e.getMessage());
+            }
+        }
+    }
 }
